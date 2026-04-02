@@ -1,4 +1,4 @@
-import { projectId, publicAnonKey } from '/utils/supabase/info';
+import { projectId, publicAnonKey } from './info';
 
 const API_BASE_URL = `https://${projectId}.supabase.co/functions/v1/make-server-2598bc7a`;
 
@@ -25,9 +25,12 @@ async function apiCall(endpoint: string, options: RequestInit = {}) {
   const token = getAuthToken();
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${token || publicAnonKey}`,
-    ...options.headers,
   };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  // Spread options.headers after setting conditional headers
+  Object.assign(headers, options.headers);
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
