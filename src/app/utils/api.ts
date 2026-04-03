@@ -23,20 +23,22 @@ export function getAuthToken(): string | null {
 
 async function apiCall(endpoint: string, options: RequestInit = {}) {
   const token = getAuthToken();
+
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
   };
+
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
-  // Spread options.headers after setting conditional headers
+
   Object.assign(headers, options.headers);
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-  ...options,
-  headers,
-  mode: "cors"
-});
+    ...options,
+    headers,
+    mode: "cors"
+  });
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({ error: 'Request failed' }));
