@@ -1,6 +1,6 @@
-import { projectId, publicAnonKey } from './info';
+import { projectId, publicAnonKey } from '../../../utils/supabase/info';
 
-const API_BASE_URL = `https://${projectId}.supabase.co/functions/v1/make-server-2598bc7a`;
+const API_BASE_URL = "https://gztshdyvtfdeofiztvxw.supabase.co/functions/v1/make-server-2598bc7a";
 
 // Storage for auth token
 let authToken: string | null = null;
@@ -33,9 +33,10 @@ async function apiCall(endpoint: string, options: RequestInit = {}) {
   Object.assign(headers, options.headers);
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    ...options,
-    headers,
-  });
+  ...options,
+  headers,
+  mode: "cors"
+});
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({ error: 'Request failed' }));
@@ -61,6 +62,7 @@ export const auth = {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
+    console.log("LOGIN RESPONSE:", data);
     if (data.session?.access_token) {
       setAuthToken(data.session.access_token);
     }

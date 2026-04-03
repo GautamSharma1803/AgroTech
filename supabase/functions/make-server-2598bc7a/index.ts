@@ -7,7 +7,16 @@ import * as kv from "./kv_store.ts";
 const app = new Hono();
 
 // Middleware
-app.use("*", cors());
+app.use("*", cors({
+  origin: "*",
+  allowHeaders: ["Content-Type", "Authorization"],
+  allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+}));
+
+app.options("*", (c) => {
+  return c.text("", 200);
+});
+
 app.use("*", logger(console.log));
 
 // Initialize Supabase client
