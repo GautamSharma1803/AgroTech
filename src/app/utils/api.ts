@@ -26,6 +26,7 @@ async function apiCall(endpoint: string, options: RequestInit = {}) {
 
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
+    'apikey': publicAnonKey,
   };
 
   if (token) {
