@@ -21,34 +21,27 @@ export function getAuthToken(): string | null {
   return authToken;
 }
 
+
+
 async function apiCall(endpoint: string, options: RequestInit = {}) {
   const token = getAuthToken();
 
   const headers: HeadersInit = {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   };
 
-  // Only add auth headers if token exists AND it's not auth routes
-  const isAuthRoute = endpoint.includes('/auth');
-
-  if (!isAuthRoute) {
-    headers['apikey'] = publicAnonKey;
-
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
+  // ONLY send Authorization if token exists
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
   }
-
-  Object.assign(headers, options.headers);
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
     headers,
-    mode: "cors"
   });
 
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: 'Request failed' }));
+    const error = await response.json().catch(() => ({ error: "Request failed" }));
     throw new Error(error.error || `HTTP ${response.status}`);
   }
 
