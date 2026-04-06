@@ -194,7 +194,7 @@ export default function CropPage() {
                       <p className="text-xs font-semibold text-gray-700">
                         Today's Tasks:
                       </p>
-                      {crop.tasks.map((task, idx) => (
+                      {crop.tasks.map((task:any, idx:number) => (
                         <div
                           key={idx}
                           className="flex items-center gap-2 text-sm"
@@ -228,18 +228,39 @@ export default function CropPage() {
             ))}
         </div>
 
-        {/* Add Crop Card */}
-        <Card className="rounded-2xl p-8 mt-4 border-2 border-dashed border-gray-300 cursor-pointer hover:border-emerald-600 hover:bg-emerald-50/50 transition-colors">
-          <div className="text-center">
-            <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3">
-              <Plus className="text-emerald-600" size={32} />
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-1">Add New Crop</h3>
-            <p className="text-sm text-gray-600">
-              Track another crop in your farm
-            </p>
-          </div>
-        </Card>
+        <div
+  onClick={async () => {
+    console.log("CLICK WORKING"); // ✅ debug
+
+    try {
+      const res = await cropsApi.create({
+        name: "Wheat",
+        type: "Crop"
+      });
+
+      console.log("API RESPONSE:", res);
+      alert("Crop added successfully");
+
+      // ✅ refresh properly
+      loadCrops();
+
+    } catch (err) {
+      console.error("ERROR:", err);
+      alert("Error adding crop");
+    }
+  }}
+  className="rounded-2xl p-8 mt-4 border-2 border-dashed border-gray-300 cursor-pointer hover:border-emerald-600 hover:bg-emerald-50/50 transition-colors"
+>
+  <div className="text-center">
+    <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3">
+      <Plus className="text-emerald-600" size={32} />
+    </div>
+    <h3 className="font-semibold text-gray-900 mb-1">Add New Crop</h3>
+    <p className="text-sm text-gray-600">
+      Track another crop in your farm
+    </p>
+  </div>
+</div>
       </div>
     </div>
   );
