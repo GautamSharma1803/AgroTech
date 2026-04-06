@@ -20,17 +20,7 @@ export default function CropPage() {
   async function loadCrops() {
     try {
       const data = await cropsApi.getAll();
-      setCrops(
-  (data || []).map((crop: any) => ({
-    ...crop,
-    tasks: crop.tasks || [],
-    image: crop.image || "https://images.unsplash.com/photo-1501004318641-b39e6451bec6",
-    variety: crop.variety || "General",
-    planted: crop.planted || "Recently",
-    harvest: crop.harvest || "60 days",
-    health: crop.health || "good"
-  }))
-);
+      setCrops(data);
     } catch (error: any) {
       console.error('Failed to load crops:', error);
       toast.error('Failed to load crops');
