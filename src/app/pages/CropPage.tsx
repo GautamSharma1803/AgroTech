@@ -12,8 +12,6 @@ export default function CropPage() {
   const [filter, setFilter] = useState('all');
   const [crops, setCrops] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [cropName, setCropName] = useState("");
-  const [health, setHealth] = useState("good");
 
   useEffect(() => {
     loadCrops();
@@ -116,25 +114,6 @@ export default function CropPage() {
       </div>
 
       <div className="p-6">
-        <div className="mb-4 space-y-2">
-  <input
-    type="text"
-    placeholder="Enter crop name"
-    value={cropName}
-    onChange={(e) => setCropName(e.target.value)}
-    className="border p-2 w-full rounded"
-  />
-
-  <select
-    value={health}
-    onChange={(e) => setHealth(e.target.value)}
-    className="border p-2 w-full rounded"
-  >
-    <option value="excellent">Excellent</option>
-    <option value="good">Good</option>
-    <option value="warning">Needs Attention</option>
-  </select>
-</div>
         {/* Filters */}
         <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
           {['all', 'excellent', 'good', 'warning'].map((status) => (
@@ -160,7 +139,7 @@ export default function CropPage() {
               <Card key={crop.id} className="rounded-2xl overflow-hidden">
                 <div className="relative h-40">
                   <ImageWithFallback
-                    src={crop.image || 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6'}
+                    src={crop.image}
                     alt={crop.name}
                     className="w-full h-full object-cover"
                   />
@@ -210,12 +189,12 @@ export default function CropPage() {
                     </div>
                   </div>
 
-                  {(crop.tasks || []).length > 0 && (
+                  {crop.tasks.length > 0 && (
                     <div className="space-y-2">
                       <p className="text-xs font-semibold text-gray-700">
                         Today's Tasks:
                       </p>
-                      {(crop.tasks || []).map((task:any, idx:number) => (
+                      {crop.tasks.map((task, idx) => (
                         <div
                           key={idx}
                           className="flex items-center gap-2 text-sm"
@@ -249,49 +228,18 @@ export default function CropPage() {
             ))}
         </div>
 
-        <div
-  onClick={async () => {
-  if (!cropName) {
-    alert("Enter crop name");
-    return;
-  }
-
-  try {
-    const res = await cropsApi.create({
-      name: cropName,
-      variety: "General",
-      planted: "Just now",
-      harvest: "60 days",
-      health: health,
-      image: "https://images.unsplash.com/photo-1501004318641-b39e6451bec6",
-      tasks: []
-    });
-
-    console.log("API RESPONSE:", res);
-    alert("Crop added successfully");
-
-    setCropName("");
-    setHealth("good");
-
-    loadCrops();
-
-  } catch (err) {
-    console.error("ERROR:", err);
-    alert("Error adding crop");
-  }
-}}
-  className="rounded-2xl p-8 mt-4 border-2 border-dashed border-gray-300 cursor-pointer hover:border-emerald-600 hover:bg-emerald-50/50 transition-colors"
->
-  <div className="text-center">
-    <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3">
-      <Plus className="text-emerald-600" size={32} />
-    </div>
-    <h3 className="font-semibold text-gray-900 mb-1">Add New Crop</h3>
-    <p className="text-sm text-gray-600">
-      Track another crop in your farm
-    </p>
-  </div>
-</div>
+        {/* Add Crop Card */}
+        <Card className="rounded-2xl p-8 mt-4 border-2 border-dashed border-gray-300 cursor-pointer hover:border-emerald-600 hover:bg-emerald-50/50 transition-colors">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3">
+              <Plus className="text-emerald-600" size={32} />
+            </div>
+            <h3 className="font-semibold text-gray-900 mb-1">Add New Crop</h3>
+            <p className="text-sm text-gray-600">
+              Track another crop in your farm
+            </p>
+          </div>
+        </Card>
       </div>
     </div>
   );
