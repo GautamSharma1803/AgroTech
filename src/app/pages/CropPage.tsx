@@ -189,12 +189,12 @@ export default function CropPage() {
                     </div>
                   </div>
 
-                  {crop.tasks.length > 0 && (
+                  {crop.tasks?.length > 0 && (
                     <div className="space-y-2">
                       <p className="text-xs font-semibold text-gray-700">
                         Today's Tasks:
                       </p>
-                      {crop.tasks.map((task:any, idx:number) => (
+                      {crop.tasks?.map((task:any, idx:number) => (
                         <div
                           key={idx}
                           className="flex items-center gap-2 text-sm"
@@ -235,7 +235,8 @@ export default function CropPage() {
     try {
       const res = await cropsApi.create({
         name: "Wheat",
-        type: "Crop"
+        type: "Crop",
+        tasks: []
       });
 
       console.log("API RESPONSE:", res);
