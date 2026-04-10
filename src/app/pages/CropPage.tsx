@@ -7,6 +7,25 @@ import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { crops as cropsApi } from '../utils/api';
 import { toast } from 'sonner';
 
+interface Crop {
+  id: number;
+  name: string;
+  variety: string;
+  planted: string;
+  harvest: string;
+  health: 'excellent' | 'good' | 'warning';
+  image: string;
+  tasks: string[];
+}
+
+interface Stats {
+  totalCrops: number;
+  activeFields: number;
+  harvestSoon: number;
+}
+
+type FilterType = 'all' | 'excellent' | 'good' | 'warning';
+
 export default function CropPage() {
   const navigate = useNavigate();
   const [filter, setFilter] = useState('all');
@@ -192,26 +211,26 @@ export default function CropPage() {
                   {crop.tasks.length > 0 && (
                     <div className="space-y-2">
                       <p className="text-xs font-semibold text-gray-700">
-                        Today's Tasks:
+                      Today's Tasks:
                       </p>
-                      {crop.tasks.map((task, idx) => (
-                        <div
-                          key={idx}
-                          className="flex items-center gap-2 text-sm"
-                        >
-                          {crop.health === 'warning' && idx === 0 ? (
-                            <AlertCircle
-                              className="text-orange-600 flex-shrink-0"
-                              size={16}
-                            />
-                          ) : (
-                            <Droplets
-                              className="text-blue-600 flex-shrink-0"
-                              size={16}
-                            />
-                          )}
-                          <span className="text-gray-700">{task}</span>
-                        </div>
+                      {(crop.tasks || []).map((task: string, idx: number) => (
+                      <div
+                        key={idx}
+                        className="flex items-center gap-2 text-sm"
+                      >
+                        {crop.health === 'warning' && idx === 0 ? (
+                        <AlertCircle
+                          className="text-orange-600 flex-shrink-0"
+                          size={16}
+                        />
+                        ) : (
+                        <Droplets
+                          className="text-blue-600 flex-shrink-0"
+                          size={16}
+                        />
+                        )}
+                        <span className="text-gray-700">{task}</span>
+                      </div>
                       ))}
                     </div>
                   )}

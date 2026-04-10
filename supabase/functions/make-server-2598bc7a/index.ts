@@ -159,6 +159,7 @@ app.post("/make-server-2598bc7a/crops", async (c) => {
     const crop = {
       id: cropId,
       userId: user.id,
+      tasks: [],
       ...cropData,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
