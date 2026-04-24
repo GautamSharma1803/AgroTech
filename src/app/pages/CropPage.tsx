@@ -28,27 +28,13 @@ type FilterType = 'all' | 'excellent' | 'good' | 'warning';
 
 export default function CropPage() {
   const navigate = useNavigate();
-  const [filter, setFilter] = useState('all');
   const [crops, setCrops] = useState<any[]>([]);
+  const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadCrops();
   }, []);
-
-  async function loadCrops() {
-    try {
-      const data = await cropsApi.getAll();
-      setCrops(data);
-    } catch (error: any) {
-      console.error('Failed to load crops:', error);
-      toast.error('Failed to load crops');
-      // Use mock data as fallback
-      setCrops(mockCrops);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   const mockCrops = [
     {
@@ -82,6 +68,20 @@ export default function CropPage() {
       tasks: ['Disease detected', 'Increase watering']
     }
   ];
+
+  async function loadCrops() {
+    try {
+      const data = await cropsApi.getAll();
+      setCrops(data);
+    } catch (error: any) {
+      console.error('Failed to load crops:', error);
+      toast.error('Failed to load crops');
+      // Use mock data as fallback
+      setCrops(mockCrops);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const displayCrops = crops.length > 0 ? crops : mockCrops;
 
@@ -133,23 +133,6 @@ export default function CropPage() {
       </div>
 
       <div className="p-6">
-        {/* Filters */}
-        <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-          {['all', 'excellent', 'good', 'warning'].map((status) => (
-            <button
-              key={status}
-              onClick={() => setFilter(status)}
-              className={`px-4 py-2 rounded-full whitespace-nowrap transition-colors ${
-                filter === status
-                  ? 'bg-emerald-600 text-white'
-                  : 'bg-white text-gray-600 border border-gray-200'
-              }`}
-            >
-              {status.charAt(0).toUpperCase() + status.slice(1)}
-            </button>
-          ))}
-        </div>
-
         {/* Crop Cards */}
         <div className="space-y-4">
           {displayCrops
@@ -208,12 +191,12 @@ export default function CropPage() {
                     </div>
                   </div>
 
-                  {crop.tasks.length > 0 && (
+                  {(crop.tasks || []).length > 0 && (
                     <div className="space-y-2">
                       <p className="text-xs font-semibold text-gray-700">
                       Today's Tasks:
                       </p>
-                      {(crop.tasks || []).map((task: string, idx: number) => (
+                      {crop.tasks.map((task: string, idx: number) => (
                       <div
                         key={idx}
                         className="flex items-center gap-2 text-sm"
@@ -245,6 +228,23 @@ export default function CropPage() {
                 </div>
               </Card>
             ))}
+        </div>
+
+        {/* Filters */}
+        <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
+          {['all', 'excellent', 'good', 'warning'].map((status) => (
+            <button
+              key={status}
+              onClick={() => setFilter(status)}
+              className={`px-4 py-2 rounded-full whitespace-nowrap transition-colors ${
+                filter === status
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-white text-gray-600 border border-gray-200'
+              }`}
+            >
+              {status.charAt(0).toUpperCase() + status.slice(1)}
+            </button>
+          ))}
         </div>
 
         {/* Add Crop Card */}
